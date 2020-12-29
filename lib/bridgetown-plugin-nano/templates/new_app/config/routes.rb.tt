@@ -1,0 +1,5 @@
+Rails.application.routes.draw do
+  scope "/<%= folder_name %>" do
+    resources :nano
+  end
+end
