@@ -1,10 +1,17 @@
 require_all "bridgetown-core/commands/concerns"
 
+require "bridgetown-plugin-nano/command_helpers/database_helpers"
+require "bridgetown-plugin-nano/command_helpers/email_helpers"
+require "bridgetown-plugin-nano/command_helpers/general_helpers"
+
 module BridgetownPluginNano
   module Commands
     class Nano < Thor
       include Thor::Actions
       include Bridgetown::Commands::ConfigurationOverridable
+      include DatabaseHelpers
+      include EmailHelpers
+      include GeneralHelpers
 
       attr_reader :folder_name, :database_prefix
 
@@ -26,40 +33,12 @@ module BridgetownPluginNano
         directory "new_app", ".", exclude_pattern: %r!DS_Store$!
 
         self.destination_root = File.expand_path(".")
-
-        template "bridgetown_root/config.ru", "config.ru"
-        copy_file "bridgetown_root/Rakefile", "Rakefile"
-
-        gsub_file "start.js", 'sleep 4; yarn serve --port " + port', 'sleep 4; bundle exec rake nano:start -- --port=" + port'
-        gsub_file "webpack.config.js", %(const path = require("path");\n), %(const path = require("path");\nconst webpack = require("webpack");\n)
-        inject_into_file "webpack.config.js", <<-JS, after: "\n  plugins: [\n"
-    new webpack.DefinePlugin({
-      NANO_API_URL: JSON.stringify(process.env.NANO_API_URL || "")
-    }),
-        JS
-
-        append_to_file "Gemfile" do
-          <<~RUBY
-
-            # Gems required by the Nano backend:
-            gem "dotenv"
-            gem "puma"
-            gem "rails"
-            gem "rack-cors"
-          RUBY
-        end
-        Bridgetown.with_unbundled_env do
-          run "bundle install", abort_on_failure: true
-        end
-
-        logger = Bridgetown.logger
-        logger.info ""
-        logger.info "Success!".green, "🎉 Your Nano backend was" \
-                    " generated in #{folder_name.cyan}."
+        configure_new_nano_app # GeneralHelpers
       end
 
       desc "database TYPE:PREFIX", 'Configure a database (types: "postgresql") and use prefix in database name'
       def database(type_prefix)
+        # NOTE: self.database_prefix is accessed by the YAML template
         dbtype, @database_prefix = type_prefix.split(':')
 
         determine_folder_name
@@ -71,15 +50,13 @@ module BridgetownPluginNano
           raise "The #{dbtype} database type is not supported"
         end
 
-        copy_file "databases/application_record.rb", "#{folder_name}/app/models/application_record.rb"
+        finish_database_setup # DatabaseHelpers
+      end
 
-        inject_into_file "#{folder_name}/config/application.rb", "require \"active_record/railtie\"\n", after: "require \"action_controller/railtie\"\n"
-
-        say_status :nano, "Database configuration complete!"
-        say_status :nano, "You will need a RAILS_ENV environment variable set,"
-        say_status :nano, "then run `bundle install`."
-        say_status :nano, "Afterwards, you can now run commands like" \
-                          " `bridgetown nano exec db:setup` to create your database."
+      desc "email", "Configure ActionMailer for sending emails"
+      def email
+        determine_folder_name
+        configure_action_mailer
       end
 
       desc "exec", "Execute any Rails subcommand"
@@ -88,13 +65,13 @@ module BridgetownPluginNano
         system("cd #{folder_name} && bundle exec rails #{args.join(" ")}")
       end
 
-      desc "console", "Rails console"
+      desc "console", %(Rails console (short-cut alias: "c"))
       def console
         determine_folder_name
         system("cd #{folder_name} && bundle exec rails console")
       end
 
-      desc "generate", "Rails generator"
+      desc "generate", %(Rails generator (short-cut alias: "g"))
       def generate(*args)
         determine_folder_name
         system("cd #{folder_name} && bundle exec rails generate #{args.join(" ")}")
@@ -110,21 +87,6 @@ module BridgetownPluginNano
         else
           raise "Nano backend folder could not be determined. Is there an" \
                 "appropriate require_relative statement in your config.ru file?"
-        end
-      end
-
-      def setup_postgresql
-        template "databases/postgresql.yml", "#{folder_name}/config/database.yml"
-
-        create_file "#{folder_name}/db/.keep", ""
-
-        append_to_file "Gemfile" do
-          <<~RUBY
-
-            if ENV["RAILS_ENV"]
-              gem "pg"
-            end
-          RUBY
         end
       end
     end
