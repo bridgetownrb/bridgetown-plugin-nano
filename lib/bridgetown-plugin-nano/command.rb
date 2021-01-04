@@ -3,6 +3,7 @@ require_all "bridgetown-core/commands/concerns"
 require "bridgetown-plugin-nano/command_helpers/database_helpers"
 require "bridgetown-plugin-nano/command_helpers/email_helpers"
 require "bridgetown-plugin-nano/command_helpers/general_helpers"
+require "bridgetown-plugin-nano/command_helpers/jobs_helpers"
 
 module BridgetownPluginNano
   module Commands
@@ -12,6 +13,7 @@ module BridgetownPluginNano
       include DatabaseHelpers
       include EmailHelpers
       include GeneralHelpers
+      include JobsHelpers
 
       attr_reader :folder_name, :database_prefix
 
@@ -63,6 +65,12 @@ module BridgetownPluginNano
       def email
         determine_folder_name
         configure_action_mailer
+      end
+
+      desc "jobs", "Configure ActiveJob for async background tasks"
+      def jobs
+        determine_folder_name
+        configure_active_job
       end
 
       desc "exec", "Execute any Rails subcommand"

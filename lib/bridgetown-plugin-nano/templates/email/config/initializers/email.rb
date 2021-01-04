@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 # This is only one example of configuring ActionMailer, in this case SendGrid.
 # For more information, read: https://guides.rubyonrails.org/action_mailer_basics.html#action-mailer-configuration
 
