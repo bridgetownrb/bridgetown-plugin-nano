@@ -36,6 +36,12 @@ module BridgetownPluginNano
         configure_new_nano_app # GeneralHelpers
       end
 
+      desc "about", "Prints information about your Rails configuration"
+      def about
+        determine_folder_name
+        system("cd #{folder_name} && bundle exec rails about")
+      end
+
       desc "database TYPE:PREFIX", 'Configure a database (types: "postgresql") and use prefix in database name'
       def database(type_prefix)
         # NOTE: self.database_prefix is accessed by the YAML template

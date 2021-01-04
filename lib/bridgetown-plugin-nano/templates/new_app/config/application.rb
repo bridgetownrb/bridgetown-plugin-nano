@@ -13,6 +13,7 @@ class NanoAPI < Rails::Application
   config.api_only = true # removes middleware we don't need
   config.logger = ActiveSupport::Logger.new($stdout)
   Rails.logger  = config.logger
+  config.filter_parameters += [:password]
   config.secret_key_base = ENV["SECRET_KEY_BASE"] # Rails won't boot w/o a secret token for session, cookies, etc.
 end
 

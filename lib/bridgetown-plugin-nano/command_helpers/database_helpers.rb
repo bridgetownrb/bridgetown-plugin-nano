@@ -18,10 +18,13 @@ module BridgetownPluginNano
         end
 
         def finish_database_setup
-          copy_file "databases/application_record.rb",
-                    "#{folder_name}/app/models/application_record.rb"
+          self.destination_root = File.expand_path(folder_name)
 
-          inject_into_file "#{folder_name}/config/application.rb",
+          append_to_file(
+            "config/base_classes.rb",
+            "\n" + File.read("#{self.class.source_root}/base_classes/application_record.rb")
+          )
+          inject_into_file "config/application.rb",
                            "require \"active_record/railtie\"\n",
                            after: "require \"action_controller/railtie\"\n"
 

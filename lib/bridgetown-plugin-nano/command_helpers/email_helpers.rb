@@ -10,6 +10,10 @@ module BridgetownPluginNano
           inject_into_file "config/application.rb",
                            "require \"action_mailer/railtie\"\n",
                            after: "require \"action_controller/railtie\"\n"
+          append_to_file(
+            "config/base_classes.rb",
+            "\n" + File.read("#{self.class.source_root}/base_classes/application_mailer.rb")
+          )
 
           say_status :nano, "ActionMailer configuration complete!"
           say_status :nano, "Take a look at #{folder_name}/test_mailer.rb for an example mailer,"
