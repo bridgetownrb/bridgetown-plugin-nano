@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BridgetownPluginNano
   module Commands
     class Nano < Thor
@@ -17,7 +19,8 @@ module BridgetownPluginNano
 
           say_status :nano, "ActionMailer configuration complete!"
           say_status :nano, "Take a look at #{folder_name}/test_mailer.rb for an example mailer,"
-          say_status :nano, "and #{folder_name}/config/initializers/email.rb to set up your SMTP connection."
+          say_status :nano, "and #{folder_name}/config/initializers/email.rb to set " \
+                            "up your SMTP connection."
         end
       end
     end

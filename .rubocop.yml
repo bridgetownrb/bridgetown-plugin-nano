@@ -20,3 +20,4 @@ AllCops:
 
     - script/**/*
     - vendor/**/*
+    - lib/bridgetown-plugin-nano/templates/**/*

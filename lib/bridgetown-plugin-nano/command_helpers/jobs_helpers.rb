@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BridgetownPluginNano
   module Commands
     class Nano < Thor
@@ -21,7 +23,8 @@ module BridgetownPluginNano
 
           say_status :nano, "ActiveJob configuration complete!"
           say_status :nano, "Take a look at #{folder_name}/test_job.rb for an example job,"
-          say_status :nano, "and #{folder_name}/config/application.rb to set your queue backend (such as Sidekiq)."
+          say_status :nano, "and #{folder_name}/config/application.rb to set your " \
+                            "queue backend (such as Sidekiq)."
         end
       end
     end

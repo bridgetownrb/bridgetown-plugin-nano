@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 module BridgetownPluginNano
   module Commands
     class Nano < Thor
       module DatabaseHelpers
         def setup_postgresql
           template "databases/postgresql.yml", "#{folder_name}/config/database.yml"
-  
+
           create_file "#{folder_name}/db/.keep", ""
-  
+
           append_to_file "Gemfile" do
             <<~RUBY
-  
+
               if ENV["RAILS_ENV"]
                 gem "pg"
               end

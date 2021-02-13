@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_all "bridgetown-core/commands/concerns"
 
 require "bridgetown-plugin-nano/command_helpers/database_helpers"
@@ -26,7 +28,8 @@ module BridgetownPluginNano
         File.expand_path("templates", __dir__)
       end
 
-      desc "new [NAME optional]", 'Install a new Nano backend into the destination subfolder (default "backend") of the Bridgetown site'
+      desc "new [NAME optional]", "Install a new Nano backend into the destination " \
+                                  'subfolder (default "backend") of the Bridgetown site'
       def new(folder_name = "backend")
         @folder_name = folder_name
         self.destination_root = File.expand_path(folder_name)
@@ -44,10 +47,11 @@ module BridgetownPluginNano
         system("cd #{folder_name} && bundle exec rails about")
       end
 
-      desc "database TYPE:PREFIX", 'Configure a database (types: "postgresql") and use prefix in database name'
+      desc "database TYPE:PREFIX", 'Configure a database (types: "postgresql") and ' \
+                                   "use prefix in database name"
       def database(type_prefix)
         # NOTE: self.database_prefix is accessed by the YAML template
-        dbtype, @database_prefix = type_prefix.split(':')
+        dbtype, @database_prefix = type_prefix.split(":")
 
         determine_folder_name
 
@@ -74,7 +78,7 @@ module BridgetownPluginNano
       end
 
       desc "exec", "Execute any Rails subcommand"
-      def exec(*arg)
+      def exec(*args)
         determine_folder_name
         system("cd #{folder_name} && bundle exec rails #{args.join(" ")}")
       end
@@ -95,7 +99,7 @@ module BridgetownPluginNano
 
       def determine_folder_name
         rackfile = File.read("config.ru")
-        matches = %r(require_relative "\./(.*?)/config/application").match(rackfile)
+        matches = %r!require_relative "\./(.*?)/config/application"!.match(rackfile)
         if matches
           @folder_name = matches[1]
         else

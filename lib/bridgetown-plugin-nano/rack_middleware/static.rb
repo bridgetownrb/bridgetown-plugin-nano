@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BridgetownPluginNano
   module Middleware
     # Based on Rack::TryStatic middleware
@@ -8,18 +10,19 @@ module BridgetownPluginNano
         @app = app
         @try = ["", ".html", "index.html", "/index.html", *options[:try]]
         @static = Rack::Static.new(
-          lambda { |_| [404, {}, []] },
-          options)
+          ->(_) { [404, {}, []] },
+          options
+        )
       end
 
       def call(env)
-        orig_path = env['PATH_INFO']
+        orig_path = env["PATH_INFO"]
         found = nil
         @try.each do |path|
-          resp = @static.call(env.merge!({'PATH_INFO' => orig_path + path}))
-          break if !(403..405).include?(resp[0]) && found = resp
+          resp = @static.call(env.merge!({ "PATH_INFO" => orig_path + path }))
+          break if !(403..405).cover?(resp[0]) && (found = resp)
         end
-        found or @app.call(env.merge!('PATH_INFO' => orig_path))
+        found || @app.call(env.merge!("PATH_INFO" => orig_path))
       end
     end
   end

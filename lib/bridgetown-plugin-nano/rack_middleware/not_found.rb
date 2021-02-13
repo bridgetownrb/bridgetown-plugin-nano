@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 module BridgetownPluginNano
   module Middleware
     class NotFound
-      def initialize(app, path, content_type = 'text/html; charset=utf-8')
+      def initialize(app, path, content_type = "text/html; charset=utf-8")
         @app = app
         @content = File.read(path)
         @length = @content.bytesize.to_s
@@ -11,7 +13,7 @@ module BridgetownPluginNano
       def call(env)
         response = @app.call(env)
         if response[0] == 404
-          [404, {'Content-Type' => @content_type, 'Content-Length' => @length}, [@content]]
+          [404, { "Content-Type" => @content_type, "Content-Length" => @length }, [@content]]
         else
           response
         end

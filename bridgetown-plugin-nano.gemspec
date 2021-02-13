@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.version       = BridgetownPluginNano::VERSION
   spec.author        = "Bridgetown Team"
   spec.email         = "maintainers@bridgetownrb.com"
-  spec.summary       = "Sets up a Rails-based Nano backend for Bridgetown"
+  spec.summary       = "Sets up a Rails-based Nano API backend for Bridgetown"
   spec.homepage      = "https://github.com/bridgetownrb/bridgetown-plugin-nano"
   spec.license       = "MIT"
 
