@@ -24,13 +24,12 @@ module BridgetownPluginNano
           append_to_file "frontend/javascript/index.js" do
             <<~JS
 
-              async function testNanoAPI() {
+
+              (async function () {
                 const resp = await fetch(`${NANO_API_URL}/nano`)
                 const data = await resp.json()
                 document.querySelector("main").innerHTML += `<p><code>${JSON.stringify(data)}</code></p>`
-              }
-              
-              testNanoAPI()            
+              }())
             JS
           end
 

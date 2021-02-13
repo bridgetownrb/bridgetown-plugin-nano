@@ -13,7 +13,15 @@ $ bundle add bridgetown-plugin-nano -g bridgetown_plugins
 
 ## Usage
 
-The plugin will…
+```shell
+$ bundle exec bridgetown nano new
+```
+
+To deploy to production you'll need a `SECRET_KEY_BASE` env var. You can generate one with this command:
+
+```shell
+$ bundle exec bridgetown nano exec secret
+```
 
 ## Testing
 
