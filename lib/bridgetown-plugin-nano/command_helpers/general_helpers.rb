@@ -17,9 +17,22 @@ module BridgetownPluginNano
 
           inject_into_file "webpack.config.js", <<-JS, after: "\n  plugins: [\n"
     new webpack.DefinePlugin({
-      NANO_API_URL: JSON.stringify(process.env.NANO_API_URL || "")
+      NANO_API_URL: JSON.stringify(process.env.NANO_API_URL || "/backend")
     }),
           JS
+
+          append_to_file "frontend/javascript/index.js" do
+            <<~JS
+
+              async function testNanoAPI() {
+                const resp = await fetch(`${NANO_API_URL}/nano`)
+                const data = await resp.json()
+                document.querySelector("main").innerHTML += `<p><code>${JSON.stringify(data)}</code></p>`
+              }
+              
+              testNanoAPI()            
+            JS
+          end
 
           append_to_file "Gemfile" do
             <<~RUBY

@@ -1,7 +1,9 @@
-# master
+# main
 
-* Use this file to keep track of plugin updates
+# 0.2.1 / 2021-02-13
 
-# 0.1.0 / 2020-05-01
+* Release as gem for further testing
 
-* First version
+# 0.1.0 / 2020-12-28
+
+* First test version

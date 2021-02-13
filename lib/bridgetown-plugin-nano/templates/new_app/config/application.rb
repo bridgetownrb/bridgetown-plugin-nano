@@ -17,4 +17,6 @@ class NanoAPI < Rails::Application
   config.secret_key_base = ENV["SECRET_KEY_BASE"] # Rails won't boot w/o a secret token for session, cookies, etc.
 end
 
+require_relative "base_classes"
+
 NanoAPI.initialize!
