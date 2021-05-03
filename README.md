@@ -1,7 +1,12 @@
-# bridgetown-plugin-nano
-One-step commands to install and configure a Rails-based Nano API backend for Bridgetown
+# May 2021 Update:
 
-**Coming in Q1 2021!**
+I've decided to suspend work on a Rails-specific integration for Bridgetown until further notice. Bridgetown does currently have an [outstanding PR for switching to Puma/Rack/Roda](https://github.com/bridgetownrb/bridgetown/pull/281) for essential routes, and you absolutely can mount a Rails API right onto that however you wish. But [in light](https://solnic.codes/2021/05/01/whoops-thoughts-on-rails-forking-and-leadership/) of [recent events](https://www.theverge.com/2021/4/30/22412714/basecamp-employees-memo-policy-hansson-fried-controversy), I will not personally be working on a Rails integration solution.
+
+----
+
+# bridgetown-plugin-nano (WIP)
+
+One-step commands to install and configure a Rails-based Nano API backend for Bridgetown
 
 ## Installation
 
